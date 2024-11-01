@@ -30,7 +30,7 @@ resource "aws_cloudwatch_dashboard" "dashboard" {
             "markdown" : "# EC2 Instances Metrics"
           }
         }
-      ] : [],
+      ] : null,
       # EC2 Widgets Section
       length(var.ec2_instance_ids) > 0 ? flatten([
 
@@ -168,7 +168,7 @@ resource "aws_cloudwatch_dashboard" "dashboard" {
           "markdown" : "# S3 Buckets Metrics"
         }
         }
-      ] : [],
+      ] : null,
 
       length(var.s3_bucket_names) > 0 ? flatten([
         for s3_bucket in var.s3_bucket_names : [
@@ -229,7 +229,7 @@ resource "aws_cloudwatch_dashboard" "dashboard" {
             "markdown" : "# ECS Services Metrics"
           }
         }
-      ] : [],
+      ] : null,
 
       length(var.ecs_services) > 0 ? flatten([
         for ecs_service in var.ecs_services : [
@@ -281,7 +281,7 @@ resource "aws_cloudwatch_dashboard" "dashboard" {
             "markdown" : "# RDS Instances Metrics"
           }
         }
-      ] : [],
+      ] : null,
 
       length(var.rds_instance_ids) > 0 ? flatten([
         for rds_id in var.rds_instance_ids : [
