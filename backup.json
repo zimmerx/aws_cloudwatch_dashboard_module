@@ -231,7 +231,7 @@ resource "aws_cloudwatch_dashboard" "dashboard" {
         }
       ] : [],
 
-      flatten([
+      length(var.ecs_services) > 0 ? flatten([
         for ecs_service in var.ecs_services : [
           {
             "type" : "metric",
@@ -266,7 +266,7 @@ resource "aws_cloudwatch_dashboard" "dashboard" {
             }
           }
         ]
-      ]),
+      ]) : null,
 
       # RDS Widgets Section
       length(var.rds_instance_ids) > 0 ? [
@@ -283,7 +283,7 @@ resource "aws_cloudwatch_dashboard" "dashboard" {
         }
       ] : [],
 
-      flatten([
+      length(var.rds_instance_ids) > 0 ? flatten([
         for rds_id in var.rds_instance_ids : [
           {
             "type" : "metric",
@@ -318,7 +318,9 @@ resource "aws_cloudwatch_dashboard" "dashboard" {
             }
           }
         ]
-      ])
-    ]),
+      ]) : null
+
+
+    ])
   })
 }

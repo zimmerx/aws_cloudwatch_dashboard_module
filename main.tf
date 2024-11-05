@@ -12,7 +12,7 @@ module "cloudwatch_dashboard" {
   # Example ec2_instance_ids  = ["i-0123456789abcdef0", "i-0987654321abcdef0"]
 
   # ECS services and cluster names
-  ecs_services = [] # to skip the service leave it empty 
+  ecs_services = [{ cluster_name = "my-ecs-cluster", service_name = "my-ecs-service1" }] # to skip the service leave it empty 
   # Example for ecs_services: 
   # ecs_services = [
   #  { cluster_name = "my-ecs-cluster", service_name = "my-ecs-service1" },
@@ -25,6 +25,6 @@ module "cloudwatch_dashboard" {
 
 
   # RDS instances
-  rds_instance_ids = [] # to skip the service leave it empty 
+  rds_instance_ids = ["my-rds-instance1"] # to skip the service leave it empty 
   # Example rds_instance_ids = ["my-rds-instance1", "my-rds-instance2"]
 }
