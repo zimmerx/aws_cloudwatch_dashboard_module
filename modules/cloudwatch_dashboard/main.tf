@@ -286,10 +286,61 @@ resource "aws_cloudwatch_dashboard" "dashboard" {
       flatten([
         for rds_id in var.rds_instance_ids : [
           {
+            "height" : 4,
+            "width" : 5,
+            "x" : 0,
+            "y" : 8 + (length(var.ec2_instance_ids) + length(var.s3_bucket_names) + length(var.ecs_services)) * 6 + index(var.rds_instance_ids, rds_id) * 6,
+            "type" : "metric",
+            "properties" : {
+              "view" : "singleValue",
+              "stacked" : false,
+              "metrics" : [
+                ["AWS/RDS", "DBLoad", { "period" : 60 }]
+              ],
+              "region" : var.aws_region,
+              "sparkline" : true
+            }
+          },
+          {
+            "height" : 4,
+            "width" : 5,
+            "x" : 5,
+            "y" : 8 + (length(var.ec2_instance_ids) + length(var.s3_bucket_names) + length(var.ecs_services)) * 6 + index(var.rds_instance_ids, rds_id) * 6,
+            "type" : "metric",
+            "properties" : {
+              "view" : "singleValue",
+              "stacked" : false,
+              "metrics" : [
+                ["AWS/RDS", "DBLoadNonCPU", "DBInstanceIdentifier", rds_id, { "period" : 60, "region" : "${var.aws_region}" }]
+              ],
+              "region" : var.aws_region,
+              "sparkline" : true,
+              "period" : 300
+            }
+          },
+          {
+            "type" : "metric",
+            "x" : 10,
+            "y" : 8 + (length(var.ec2_instance_ids) + length(var.s3_bucket_names) + length(var.ecs_services)) * 6 + index(var.rds_instance_ids, rds_id) * 6,
+            "width" : 5,
+            "height" : 4,
+            "properties" : {
+              "metrics" : [
+                ["AWS/RDS", "FreeStorageSpace", "DBInstanceIdentifier", rds_id]
+              ],
+              "region" : var.aws_region,
+              "period" : 300,
+              "stat" : "Average",
+              "view" : "singleValue",
+              "stacked" : true,
+              "title" : "RDS Free Storage Space - ${rds_id}"
+            }
+          },
+          {
             "type" : "metric",
             "x" : 0,
             "y" : 8 + (length(var.ec2_instance_ids) + length(var.s3_bucket_names) + length(var.ecs_services)) * 6 + index(var.rds_instance_ids, rds_id) * 6,
-            "width" : 6,
+            "width" : 5,
             "height" : 6,
             "properties" : {
               "metrics" : [
@@ -298,23 +349,15 @@ resource "aws_cloudwatch_dashboard" "dashboard" {
               "region" : var.aws_region,
               "period" : 300,
               "stat" : "Average",
+              "view" : "gauge",
+              "stacked" : true,
+              "yAxis" : {
+                "left" : {
+                  "min" : 0,
+                  "max" : 100
+                }
+              },
               "title" : "RDS CPU Utilization - ${rds_id}"
-            }
-          },
-          {
-            "type" : "metric",
-            "x" : 6,
-            "y" : 8 + (length(var.ec2_instance_ids) + length(var.s3_bucket_names) + length(var.ecs_services)) * 6 + index(var.rds_instance_ids, rds_id) * 6,
-            "width" : 6,
-            "height" : 6,
-            "properties" : {
-              "metrics" : [
-                ["AWS/RDS", "FreeStorageSpace", "DBInstanceIdentifier", rds_id]
-              ],
-              "region" : var.aws_region,
-              "period" : 300,
-              "stat" : "Average",
-              "title" : "RDS Free Storage Space - ${rds_id}"
             }
           }
         ]
